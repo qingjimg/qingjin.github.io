@@ -1,0 +1,209 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>青衿验证</title>
+    <style>
+        body {
+            margin: 0;
+            padding: 80px 20px;
+            font-family: "微软雅黑", sans-serif;
+            background-color: #000000;
+            min-height: 100vh;
+            box-sizing: border-box;
+        }
+        .card {
+            background: #000000;
+            padding: 40px;
+            border-radius: 16px;
+            box-shadow: 0 4px 12px rgba(0,255,0,0.1);
+            max-width: 400px;
+            margin: 0 auto;
+            text-align: center;
+        }
+        .title {
+            margin-bottom: 30px;
+            color: #00ff00;
+            font-size: 28px;
+        }
+        .serial-box {
+            background: #111;
+            color: #00ff00;
+            padding: 12px 24px;
+            border-radius: 8px;
+            display: inline-block;
+            margin-bottom: 20px;
+        }
+        .serial-number {
+            color: #00ff00;
+            font-weight: bold;
+        }
+        .tip {
+            color: #ff5722;
+            font-size: 14px;
+            margin-bottom: 20px;
+            padding: 8px;
+            border: 1px dashed #ff5722;
+            border-radius: 8px;
+        }
+        .password-label {
+            display: block;
+            margin-bottom: 8px;
+            color: #00ff00;
+            font-size: 16px;
+        }
+        .password-input {
+            width: 240px;
+            padding: 10px;
+            border: 1px solid #00ff00;
+            background: #111;
+            color: #00ff00;
+            border-radius: 8px;
+            font-size: 16px;
+            margin-bottom: 10px;
+            outline: none;
+        }
+        .password-input:focus {
+            box-shadow: 0 0 0 2px rgba(0,255,0,0.3);
+        }
+        .verify-btn {
+            background: #00ff00;
+            color: #000000;
+            border: none;
+            padding: 10px 28px;
+            border-radius: 8px;
+            font-size: 16px;
+            cursor: pointer;
+        }
+        .tagline {
+            display: block;
+            color: #00ff00;
+            font-size: 14px;
+            margin-top: 8px;
+            font-weight: 500;
+        }
+        .message {
+            margin-top: 16px;
+            font-size: 14px;
+            height: 20px;
+        }
+        .footer {
+            position: fixed;
+            bottom: 20px;
+            left: 0;
+            right: 0;
+            text-align: center;
+            color: #00ff00;
+            font-size: 13px;
+        }
+    </style>
+</head>
+<body>
+    <div class="card">
+        <h1 class="title">青衿轰炸器</h1>
+        <div class="serial-box">
+            你的专属序列号：<span id="s1"></span>
+        </div>
+        <div class="tip">
+            请将上方序列号发给青衿获取专属卡密！
+        </div>
+        <label for="i1" class="password-label">请输入专属卡密：</label>
+        <input type="text" id="i1" class="password-input" placeholder="输入青衿提供的7位卡密">
+        <div>
+            <button onclick="f1()" class="verify-btn">点击验证</button>
+            <div class="tagline">青衿出品必属精品</div>
+        </div>
+        <p id="m1" class="message"></p>
+    </div>
+    <div class="footer">© 2026 青衿 | 仅供学习交流使用</div>
+
+    <script>
+        function f2() {
+            let s = localStorage.getItem('k1');
+            if (!s) {
+                const i = navigator.userAgent + screen.width + screen.height + navigator.language;
+                let h = 0;
+                for (let j = 0; j < i.length; j++) {
+                    h = (h << 5) - h + i.charCodeAt(j);
+                    h = h & h;
+                }
+                s = Math.abs(h).toString().slice(0, 8).padEnd(8, '0');
+                localStorage.setItem('k1', s);
+            }
+            return s;
+        }
+        const s2 = f2();
+        document.getElementById('s1').textContent = s2;
+
+        function f3(s) {
+            let n = parseInt(s);
+            n = (n * 888 + 666) % 9999999;
+            return n.toString().padStart(7, '0');
+        }
+
+        // 页面加载时判断状态
+        window.onload = function () {
+            const savedToken = localStorage.getItem('userToken');
+            const correctKey = f3(s2);
+            const m2 = document.getElementById('m1');
+            const input = document.getElementById('i1');
+
+            if (savedToken === correctKey) {
+                // 
+                input.placeholder = "已验证过卡密点击验证直接进入";
+                input.disabled = true; // 
+                m2.textContent = "验证成功 到期时间：2099-01-01，点击验证进入";
+                m2.style.color = "green";
+            }
+        }
+
+        function f1() {
+            const i2 = document.getElementById('i1').value.trim();
+            const m2 = document.getElementById('m1');
+            m2.textContent = "";
+
+            const correctKey = f3(s2);
+            const savedToken = localStorage.getItem('userToken');
+
+            // 
+            if (savedToken === correctKey) {
+                m2.textContent = "验证成功 到期时间：2099-01-01，正在跳转...";
+                m2.style.color = "green";
+                setTimeout(() => {
+                    window.location.href = "zc.html";
+                }, 800);
+                return;
+            }
+
+            // 
+            if (!i2) {
+                m2.textContent = "请输入卡密！";
+                m2.style.color = "red";
+                return;
+            }
+            if (i2.length !== 7 || isNaN(i2)) {
+                m2.textContent = "卡密为7位数字，请核对！";
+                m2.style.color = "red";
+                return;
+            }
+
+            if (i2 === correctKey) {
+                localStorage.setItem('userToken', i2);
+                m2.textContent = "验证成功 到期时间：2099-01-01，正在跳转...";
+                m2.style.color = "green";
+                setTimeout(() => {
+                    window.location.href = "zc.html";
+                }, 1000);
+            } else {
+                m2.textContent = "卡密错误与设备不匹配！";
+                m2.style.color = "red";
+            }
+        }
+
+        document.getElementById('i1').addEventListener('keydown', (e) => {
+            if (e.key === 'Enter') f1();
+        });
+    </script>
+</body>
+</html>
